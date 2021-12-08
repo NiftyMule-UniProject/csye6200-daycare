@@ -4,6 +4,7 @@ import edu.neu.csye6200.Helper.FileUtils;
 import edu.neu.csye6200.Model.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,10 +15,11 @@ public class ApplicationContext
     private final static String TEACHERS_CSV_FILEPATH = "src/main/resources/teachers.txt";
     private final static String CLASSROOMS_CSV_FILEPATH = "src/main/resources/classrooms.txt";
     private final static String RELATIONS_CSV_FILEPATH = "src/main/resources/relations.txt";
+    private final static String IMMU_RECORDS_CSV_FILEPATH = "src/main/resources/immunization_records.txt";
 
-    private List<Student> students;
-    private List<Teacher> teachers;
-    private List<Classroom> classrooms;
+    private final List<Student> students;
+    private final List<Teacher> teachers;
+    private final List<Classroom> classrooms;
 
     public ApplicationContext()
     {
@@ -67,6 +69,11 @@ public class ApplicationContext
         List<String> relationsCSV = FileUtils.readAllLines(RELATIONS_CSV_FILEPATH);
         assert relationsCSV != null;
         createRelations(relationsCSV);
+
+        // load immunization records
+        List<String> immuRecordsCSV = FileUtils.readAllLines(IMMU_RECORDS_CSV_FILEPATH);
+        assert immuRecordsCSV != null;
+        createImmuRecords(immuRecordsCSV);
     }
 
     private void createRelations(List<String> relationCSV)
@@ -114,31 +121,29 @@ public class ApplicationContext
         }
     }
 
-    public Student findStudentByName(String name)
+    public void createImmuRecords(List<String> CSVs)
     {
-        for (Student student : students)
-        {
-            if (student.getName().equals(name)) return student;
-        }
-        return null;
-    }
+        // Format: "[studentName],[vaccineType],[doseNumber],[injectionDate(yyyy-MM-dd)]"
 
-    public Teacher findTeacherByName(String name)
-    {
-        for (Teacher teacher : teachers)
+        for (String csv : CSVs)
         {
-            if (teacher.getName().equals(name)) return teacher;
-        }
-        return null;
-    }
+            try
+            {
+                Scanner scanner = new Scanner(csv);
+                scanner.useDelimiter(",");
 
-    public Classroom findClassroomByName(String name)
-    {
-        for (Classroom classroom : classrooms)
-        {
-            if (classroom.getName().equals(name)) return classroom;
+                String studentName = scanner.next();
+                Student student = findStudentByName(studentName);
+                if (student == null)
+                    throw new Exception("cannot find student by name!");
+                if (!student.createImmuRecordFromCSV(scanner.nextLine()))
+                    throw new Exception("cannot create immunization object!");
+            } catch (Exception e)
+            {
+                System.err.printf("Cannot load immunization record - [%s] %s\n",
+                        csv, e.getMessage() != null ? e.getMessage() : "");
+            }
         }
-        return null;
     }
 
     public void updateDB()
@@ -161,6 +166,10 @@ public class ApplicationContext
         // update relations
         List<String> relations = generateRelations();
         FileUtils.writeToFile(RELATIONS_CSV_FILEPATH, relations);
+
+        // update immunization records
+        List<String> immuRecords = generateImmuRecords();
+        FileUtils.writeToFile(IMMU_RECORDS_CSV_FILEPATH, immuRecords);
     }
 
     private List<String> generateRelations()
@@ -190,6 +199,19 @@ public class ApplicationContext
         return relations;
     }
 
+    private List<String> generateImmuRecords()
+    {
+        List<String> immuRecords = new ArrayList<>();
+        for (Student student : students)
+        {
+            for (Immunization immunization : student.getImmunizations())
+            {
+                immuRecords.add(String.format("%s,%s", student.getName(), immunization.toCSV()));
+            }
+        }
+        return immuRecords;
+    }
+
     @Override
     public String toString()
     {
@@ -200,35 +222,90 @@ public class ApplicationContext
                 '}';
     }
 
-    // ========= setters and getters ==========
+    public Student findStudentByName(String name)
+    {
+        for (Student student : students)
+        {
+            if (student.getName().equals(name)) return student;
+        }
+        return null;
+    }
+
+    public boolean addStudent(Student student)
+    {
+        if (findStudentByName(student.getName()) != null)
+            return false;
+        students.add(student);
+        return true;
+    }
+
+    public boolean deleteStudentByName(String studentName)
+    {
+        Student student = findStudentByName(studentName);
+        if (student == null) return false;
+        return students.remove(student);
+    }
+
+    public Teacher findTeacherByName(String name)
+    {
+        for (Teacher teacher : teachers)
+        {
+            if (teacher.getName().equals(name)) return teacher;
+        }
+        return null;
+    }
+
+    public boolean addTeacher(Teacher teacher)
+    {
+        if (findTeacherByName(teacher.getName()) != null)
+            return false;
+        teachers.add(teacher);
+        return true;
+    }
+
+    public boolean deleteTeacherByName(String teacherName)
+    {
+        Teacher teacher = findTeacherByName(teacherName);
+        if (teacher == null) return false;
+        return teachers.remove(teacher);
+    }
+
+    public Classroom findClassroomByName(String name)
+    {
+        for (Classroom classroom : classrooms)
+        {
+            if (classroom.getName().equals(name)) return classroom;
+        }
+        return null;
+    }
+
+    public boolean addClassroom(Classroom room)
+    {
+        if (findClassroomByName(room.getName()) != null)
+            return false;
+        classrooms.add(room);
+        return true;
+    }
+
+    public boolean deleteClassroomByName(String classroomName)
+    {
+        Classroom room = findClassroomByName(classroomName);
+        if (room == null) return false;
+        return classrooms.remove(room);
+    }
 
     public List<Student> getStudents()
     {
-        return students;
-    }
-
-    public void setStudents(List<Student> students)
-    {
-        this.students = students;
+        return Collections.unmodifiableList(students);
     }
 
     public List<Teacher> getTeachers()
     {
-        return teachers;
-    }
-
-    public void setTeachers(List<Teacher> teachers)
-    {
-        this.teachers = teachers;
+        return Collections.unmodifiableList(teachers);
     }
 
     public List<Classroom> getClassrooms()
     {
-        return classrooms;
-    }
-
-    public void setClassrooms(List<Classroom> classrooms)
-    {
-        this.classrooms = classrooms;
+        return Collections.unmodifiableList(classrooms);
     }
 }

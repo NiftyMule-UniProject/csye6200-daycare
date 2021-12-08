@@ -1,3 +1,2 @@
 student1,11,parentName1,parentAddr1,9999999999,2021-12-01
 student2,14,parentName2,parentAddr2,8888888888,2021-11-14
-student3,16,parentName3,parentAddr3,777777777,2019-02-02

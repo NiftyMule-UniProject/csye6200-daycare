@@ -1,19 +1,29 @@
 package edu.neu.csye6200.Model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Immunization
 {
 
     private String vaccineType;
     private int dose;
-    private LocalDate time;
+    private LocalDate date;
 
-    public Immunization(String vaccineType, int dose, LocalDate time)
+    protected Immunization(String vaccineType, int dose, LocalDate date)
     {
         this.vaccineType = vaccineType;
         this.dose = dose;
-        this.time = time;
+        this.date = date;
+    }
+
+    public String toCSV()
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return String.format("%s,%s,%s",
+                this.vaccineType,
+                this.dose,
+                this.date.format(formatter));
     }
 
     @Override
@@ -22,7 +32,7 @@ public class Immunization
         return "Immunization{" +
                 "vaccineType='" + vaccineType + '\'' +
                 ", dose=" + dose +
-                ", time=" + time +
+                ", time=" + date +
                 '}';
     }
 
@@ -48,13 +58,13 @@ public class Immunization
         this.dose = dose;
     }
 
-    public LocalDate getTime()
+    public LocalDate getDate()
     {
-        return time;
+        return date;
     }
 
-    public void setTime(LocalDate time)
+    public void setDate(LocalDate date)
     {
-        this.time = time;
+        this.date = date;
     }
 }

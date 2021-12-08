@@ -13,13 +13,14 @@ public class Application
         ApplicationContext context = new ApplicationContext();
 
         Classroom room3 = new Classroom("classroom3", 1);
-        context.getClassrooms().add(room3);
+        context.addClassroom(room3);
         Teacher teacher3 = new Teacher("teacher3", 1, LocalDate.parse("2020-01-01"));
-        context.getTeachers().add(teacher3);
+        context.addTeacher(teacher3);
         Student student3 = new Student("student3", 16, "parentName3", "parentAddr3", "777777777", LocalDate.parse("2019-02-02"));
-        context.getStudents().add(student3);
+        context.addStudent(student3);
         student3.assignTeacher(teacher3);
         teacher3.assignClassroom(room3);
+        student3.createImmuRecord("covid1", 2, LocalDate.parse("2021-12-20"));
         context.updateDB();
     }
 }

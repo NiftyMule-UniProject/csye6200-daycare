@@ -1,6 +1,5 @@
 package edu.neu.csye6200.Model;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Classroom
@@ -8,14 +7,15 @@ public class Classroom
 
     private static List<Integer> roomAgeGroupRules;
     private static Map<String, Integer> ageGroupMap;
+    private final List<Teacher> teachers;
     private String name;
-    private List<Teacher> teachers;
     private int ageGroup;
 
     public Classroom(String name, int ageGroup)
     {
         this.name = name;
         this.ageGroup = ageGroup;
+        this.teachers = new ArrayList<>();
     }
 
     public static List<Integer> getRoomAgeGroupRules()
@@ -117,7 +117,6 @@ public class Classroom
 
     public int getNumOfTeachers()
     {
-        if (teachers == null) return 0;
         return teachers.size();
     }
 
@@ -152,11 +151,6 @@ public class Classroom
     public List<Teacher> getTeachers()
     {
         return teachers;
-    }
-
-    public void setTeachers(List<Teacher> teachers)
-    {
-        this.teachers = teachers;
     }
 
     public int getAgeGroup()

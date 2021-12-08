@@ -12,3 +12,6 @@
 
 - relations.txt
 [relationType ('student'/'teacher')],[Person],[PersonToBeAssigned]
+
+- immunizationRecords.txt
+[studentName],[vaccineType],[doseNumber],[injectionDate(yyyy-MM-dd)]

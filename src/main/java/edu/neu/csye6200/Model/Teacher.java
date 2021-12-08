@@ -1,15 +1,15 @@
 package edu.neu.csye6200.Model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Teacher extends Person
 {
 
     private static List<Integer> ageGroupRules;
-    private List<Student> students;
+    private final List<Student> students;
     private int ageGroup;
     private LocalDate reviewDate;
     private Classroom classroom;
@@ -19,6 +19,7 @@ public class Teacher extends Person
         super(name);
         this.ageGroup = ageGroup;
         this.reviewDate = reviewDate;
+        this.students = new ArrayList<>();
     }
 
     public static List<Integer> getAgeGroupRules()
@@ -33,16 +34,16 @@ public class Teacher extends Person
 
     public int getNumOfStudents()
     {
-        if (students == null) return 0;
         return students.size();
     }
 
     public boolean assignClassroom(Classroom room)
     {
         if (room.getNumOfTeachers() < Classroom.getRoomAgeGroupRules().get(room.getAgeGroup())
-            && room.getAgeGroup() == this.ageGroup)
+                && room.getAgeGroup() == this.ageGroup)
         {
             setClassroom(room);
+            room.getTeachers().add(this);
             return true;
         }
         else
@@ -85,11 +86,6 @@ public class Teacher extends Person
     public List<Student> getStudents()
     {
         return students;
-    }
-
-    public void setStudents(List<Student> students)
-    {
-        this.students = students;
     }
 
     public int getAgeGroup()

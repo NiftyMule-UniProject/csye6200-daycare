@@ -1,11 +1,10 @@
 package edu.neu.csye6200.Model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Formatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Student extends Person
 {
@@ -25,6 +24,50 @@ public class Student extends Person
         this.parentPhoneNum = parentPhoneNum;
         this.registrationDate = registrationDate;
         this.age = age;
+        this.immunizations = new ArrayList<>();
+    }
+
+    public boolean assignTeacher(Teacher teacher)
+    {
+        if (teacher.getNumOfStudents() < Teacher.getAgeGroupRules().get(teacher.getAgeGroup()) &&
+                Classroom.getAgeGroupByAge(this.age) == teacher.getAgeGroup())
+        {
+            setAssignedTeacher(teacher);
+            teacher.getStudents().add(this);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public boolean createImmuRecord(String type, int dose, LocalDate date)
+    {
+        Immunization immunization = new Immunization(type, dose, date);
+        immunizations.add(immunization);
+        return true;
+    }
+
+    public boolean createImmuRecordFromCSV(String csv)
+    {
+        try
+        {
+            Scanner scanner = new Scanner(csv);
+            scanner.useDelimiter(",");
+
+            String type = scanner.next();
+            int dose = scanner.nextInt();
+            String dateStr = scanner.next();
+            LocalDate date = LocalDate.parse(dateStr);
+
+            Immunization immunization = new Immunization(type, dose, date);
+            immunizations.add(immunization);
+        } catch (Exception e)
+        {
+            return false;
+        }
+        return true;
     }
 
     public String toCSV()
@@ -37,20 +80,6 @@ public class Student extends Person
                 this.parentAddress,
                 this.parentPhoneNum,
                 this.registrationDate.format(formatter));
-    }
-
-    public boolean assignTeacher(Teacher teacher)
-    {
-        if (teacher.getNumOfStudents() < Teacher.getAgeGroupRules().get(teacher.getAgeGroup()) &&
-            Classroom.getAgeGroupByAge(this.age) == teacher.getAgeGroup())
-        {
-            setAssignedTeacher(teacher);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     @Override
