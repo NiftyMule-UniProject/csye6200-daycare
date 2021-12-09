@@ -170,28 +170,30 @@ public class DayCare
 
     public void updateDB()
     {
-        // update students
-        List<String> studentsCSV = new ArrayList<>();
-        for (Student student : students) studentsCSV.add(student.toCSV());
-        FileUtils.writeToFile(STUDENTS_CSV_FILEPATH, studentsCSV);
+        // Comment out for development purpose
 
-        // update teachers
-        List<String> teachersCSV = new ArrayList<>();
-        for (Teacher teacher : teachers) teachersCSV.add(teacher.toCSV());
-        FileUtils.writeToFile(TEACHERS_CSV_FILEPATH, teachersCSV);
-
-        // update classrooms
-        List<String> classroomsCSV = new ArrayList<>();
-        for (Classroom room : classrooms) classroomsCSV.add(room.toCSV());
-        FileUtils.writeToFile(CLASSROOMS_CSV_FILEPATH, classroomsCSV);
-
-        // update relations
-        List<String> relations = generateRelations();
-        FileUtils.writeToFile(RELATIONS_CSV_FILEPATH, relations);
-
-        // update immunization records
-        List<String> immuRecords = generateImmuRecords();
-        FileUtils.writeToFile(IMMU_RECORDS_CSV_FILEPATH, immuRecords);
+//        // update students
+//        List<String> studentsCSV = new ArrayList<>();
+//        for (Student student : students) studentsCSV.add(student.toCSV());
+//        FileUtils.writeToFile(STUDENTS_CSV_FILEPATH, studentsCSV);
+//
+//        // update teachers
+//        List<String> teachersCSV = new ArrayList<>();
+//        for (Teacher teacher : teachers) teachersCSV.add(teacher.toCSV());
+//        FileUtils.writeToFile(TEACHERS_CSV_FILEPATH, teachersCSV);
+//
+//        // update classrooms
+//        List<String> classroomsCSV = new ArrayList<>();
+//        for (Classroom room : classrooms) classroomsCSV.add(room.toCSV());
+//        FileUtils.writeToFile(CLASSROOMS_CSV_FILEPATH, classroomsCSV);
+//
+//        // update relations
+//        List<String> relations = generateRelations();
+//        FileUtils.writeToFile(RELATIONS_CSV_FILEPATH, relations);
+//
+//        // update immunization records
+//        List<String> immuRecords = generateImmuRecords();
+//        FileUtils.writeToFile(IMMU_RECORDS_CSV_FILEPATH, immuRecords);
     }
 
     private List<String> generateRelations()
@@ -270,6 +272,7 @@ public class DayCare
     {
         Student student = findStudentByName(studentName);
         if (student == null) return false;
+        student.getAssignedTeacher().getStudents().remove(student);
         return students.remove(student);
     }
 
@@ -294,6 +297,7 @@ public class DayCare
     {
         Teacher teacher = findTeacherByName(teacherName);
         if (teacher == null) return false;
+        teacher.getClassroom().getTeachers().remove(teacher);
         return teachers.remove(teacher);
     }
 

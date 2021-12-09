@@ -2,7 +2,6 @@ package edu.neu.csye6200.View;
 
 import edu.neu.csye6200.Model.DayCare;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -10,8 +9,6 @@ import java.awt.*;
  */
 public class StartScreen extends javax.swing.JPanel
 {
-
-    JPanel container;
 
     public StartScreen(DayCare daycare)
     {
@@ -80,10 +77,10 @@ public class StartScreen extends javax.swing.JPanel
 
     private void btnStudentsActionPerformed(java.awt.event.ActionEvent evt)
     {//GEN-FIRST:event_btnStudentsActionPerformed
-        StudentJPanel studentJPanel = new StudentJPanel(daycare, container);
-        container.add("StudentJPanel", studentJPanel);
-        CardLayout layout = (CardLayout) container.getLayout();
-        layout.next(container);
+        StudentView studentView = new StudentView(daycare);
+        this.getParent().add("StudentJPanel", studentView);
+        CardLayout layout = (CardLayout) this.getParent().getLayout();
+        layout.next(this.getParent());
     }//GEN-LAST:event_btnStudentsActionPerformed
 
 

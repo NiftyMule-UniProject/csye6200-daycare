@@ -37,6 +37,10 @@ public class Teacher extends Person
         return students.size();
     }
 
+    public int getCapacity() {
+        return ageGroupRules.get(ageGroup) - students.size();
+    }
+
     public boolean assignClassroom(Classroom room)
     {
         if (room.getNumOfTeachers() < Classroom.getRoomAgeGroupRules().get(room.getAgeGroup())
