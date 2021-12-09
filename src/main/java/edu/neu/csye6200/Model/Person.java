@@ -11,14 +11,6 @@ public abstract class Person
 
     public abstract String toCSV();
 
-    @Override
-    public String toString()
-    {
-        return "Person{" +
-                "name='" + name + '\'' +
-                '}';
-    }
-
     public String getName()
     {
         return name;

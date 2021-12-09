@@ -61,16 +61,6 @@ public class Teacher extends Person
                 this.reviewDate.format(formatter));
     }
 
-    @Override
-    public String toString()
-    {
-        return "Teacher{" +
-                "students=" + students +
-                ", ageGroup=" + ageGroup +
-                ", reviewDate=" + reviewDate +
-                '}';
-    }
-
     // ========= setters and getters ==========
 
     public Classroom getClassroom()

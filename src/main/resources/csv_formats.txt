@@ -15,3 +15,6 @@
 
 - immunizationRecords.txt
 [studentName],[vaccineType],[doseNumber],[injectionDate(yyyy-MM-dd)]
+
+- credentials.txt
+[username],[password]

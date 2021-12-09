@@ -1,8 +1,10 @@
 package edu.neu.csye6200;
 
 import edu.neu.csye6200.Model.Classroom;
+import edu.neu.csye6200.Model.DayCare;
 import edu.neu.csye6200.Model.Student;
 import edu.neu.csye6200.Model.Teacher;
+import edu.neu.csye6200.View.MainJFrame;
 
 import java.time.LocalDate;
 
@@ -10,8 +12,23 @@ public class Application
 {
     public static void main(String[] args)
     {
-        ApplicationContext context = new ApplicationContext();
+        DayCare context = new DayCare();
 
+        /* Set the Nimbus look and feel */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        
+        // start the application
+        java.awt.EventQueue.invokeLater(() -> new MainJFrame(context).setVisible(true));
+        
         Classroom room3 = new Classroom("classroom3", 1);
         context.addClassroom(room3);
         Teacher teacher3 = new Teacher("teacher3", 1, LocalDate.parse("2020-01-01"));
@@ -21,6 +38,5 @@ public class Application
         student3.assignTeacher(teacher3);
         teacher3.assignClassroom(room3);
         student3.createImmuRecord("covid1", 2, LocalDate.parse("2021-12-20"));
-        context.updateDB();
     }
 }

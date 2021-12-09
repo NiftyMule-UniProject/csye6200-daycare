@@ -82,20 +82,6 @@ public class Student extends Person
                 this.registrationDate.format(formatter));
     }
 
-    @Override
-    public String toString()
-    {
-        return "Student{" +
-                "parentName='" + parentName + '\'' +
-                ", parentAddress='" + parentAddress + '\'' +
-                ", parentPhoneNum='" + parentPhoneNum + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", assignedTeacher=" + assignedTeacher +
-                ", immunizations=" + immunizations +
-                ", age=" + age +
-                '}';
-    }
-
     // ========= setters and getters ==========
 
     public String getParentName()

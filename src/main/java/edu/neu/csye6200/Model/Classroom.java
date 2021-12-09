@@ -127,15 +127,6 @@ public class Classroom
                 getAgeRangeByAgeGroup(this.ageGroup));
     }
 
-    @Override
-    public String toString()
-    {
-        return "Classroom{" +
-                "teachers=" + teachers +
-                ", ageGroup=" + ageGroup +
-                '}';
-    }
-
     // ========= setters and getters ==========
 
     public String getName()

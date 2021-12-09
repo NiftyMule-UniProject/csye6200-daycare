@@ -1,14 +1,11 @@
-package edu.neu.csye6200;
+package edu.neu.csye6200.Model;
 
 import edu.neu.csye6200.Helper.FileUtils;
 import edu.neu.csye6200.Model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class ApplicationContext
+public class DayCare
 {
     private final static String RULES_CSV_FILEPATH = "src/main/resources/rules.txt";
     private final static String STUDENTS_CSV_FILEPATH = "src/main/resources/students.txt";
@@ -16,16 +13,19 @@ public class ApplicationContext
     private final static String CLASSROOMS_CSV_FILEPATH = "src/main/resources/classrooms.txt";
     private final static String RELATIONS_CSV_FILEPATH = "src/main/resources/relations.txt";
     private final static String IMMU_RECORDS_CSV_FILEPATH = "src/main/resources/immunization_records.txt";
+    private final static String CREDENTIALS_CSV_FILEPATH = "src/main/resources/credentials.txt";
 
     private final List<Student> students;
     private final List<Teacher> teachers;
     private final List<Classroom> classrooms;
+    private final Map<String, String> credentials;
 
-    public ApplicationContext()
+    public DayCare()
     {
         students = new ArrayList<>();
         teachers = new ArrayList<>();
         classrooms = new ArrayList<>();
+        credentials = new HashMap<>();
         init();
     }
 
@@ -74,6 +74,11 @@ public class ApplicationContext
         List<String> immuRecordsCSV = FileUtils.readAllLines(IMMU_RECORDS_CSV_FILEPATH);
         assert immuRecordsCSV != null;
         createImmuRecords(immuRecordsCSV);
+
+        // load user credentials
+        List<String> credentialsCSV = FileUtils.readAllLines(CREDENTIALS_CSV_FILEPATH);
+        assert credentialsCSV != null;
+        loadCredentials(credentialsCSV);
     }
 
     private void createRelations(List<String> relationCSV)
@@ -146,6 +151,23 @@ public class ApplicationContext
         }
     }
 
+    public void loadCredentials(List<String> credentialsCSV)
+    {
+        // Format: "[username],[password]"
+
+        for (String csv : credentialsCSV)
+        {
+            if (!csv.matches("[0-9a-zA-Z]*,[0-9a-zA-Z]*"))
+            {
+                System.err.println("Cannot load credential - " + csv);
+                continue;
+            }
+            String username = csv.substring(0, csv.indexOf(","));
+            String password = csv.substring(csv.indexOf(",") + 1);
+            credentials.put(username, password);
+        }
+    }
+
     public void updateDB()
     {
         // update students
@@ -210,6 +232,11 @@ public class ApplicationContext
             }
         }
         return immuRecords;
+    }
+
+    public boolean validateUser(String username, String password)
+    {
+        return credentials.containsKey(username) && credentials.get(username).equals(password);
     }
 
     @Override
@@ -296,16 +323,16 @@ public class ApplicationContext
 
     public List<Student> getStudents()
     {
-        return Collections.unmodifiableList(students);
+        return students;
     }
 
     public List<Teacher> getTeachers()
     {
-        return Collections.unmodifiableList(teachers);
+        return teachers;
     }
 
     public List<Classroom> getClassrooms()
     {
-        return Collections.unmodifiableList(classrooms);
+        return classrooms;
     }
 }

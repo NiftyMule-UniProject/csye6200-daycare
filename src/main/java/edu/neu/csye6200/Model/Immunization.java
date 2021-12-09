@@ -26,16 +26,6 @@ public class Immunization
                 this.date.format(formatter));
     }
 
-    @Override
-    public String toString()
-    {
-        return "Immunization{" +
-                "vaccineType='" + vaccineType + '\'' +
-                ", dose=" + dose +
-                ", time=" + date +
-                '}';
-    }
-
     // ========= setters and getters ==========
 
     public String getVaccineType()
